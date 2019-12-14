@@ -47,50 +47,49 @@ class MultiplasExecucoes(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-            mensagem = '======================================================='
-            mensagem = mensagem + '\n' + 'Bem vindo ao Show do Milhão'
-            mensagem = mensagem + '\n' + 'Insira seu nickname: '
+        mensagem = '======================================================='
+        mensagem = mensagem + '\n' + 'Bem vindo ao Show do Milhão'
+        mensagem = mensagem + '\n' + 'Insira seu nickname: '
+        self.conexao.send(str.encode(mensagem))
+        nickname = self.conexao.recv(1024)
+        self.nickname = str(nickname, 'utf-8')
+        self.pontuacao = 0
+        self.pular = 3
+        self.id = 0
+        chances = 3
+        cont = 0
+        marcador = []
+        while chances > 0 and cont < 10:
+            while self.id in marcador:
+                self.id = randint(0,4)
+            marcador.append(self.id)
+            mensagem = interface(self.nickname, self.pontuacao, self.id, self.pular, chances)
             self.conexao.send(str.encode(mensagem))
-            nickname = self.conexao.recv(1024)
-            self.nickname = str(nickname, 'utf-8')
-            self.pontuacao = 0
-            self.pular = 3
-            self.id = 0
-            chances = 3
-            cont = 0
-            marcador = []
-            while chances > 0 and cont < 10:
-                while self.id in marcador:
-                    self.id = randint(0,4)
-                marcador.append(self.id)
-                mensagem = interface(self.nickname, self.pontuacao, self.id, self.pular, chances)
-                self.conexao.send(str.encode(mensagem))
-                resposta = self.conexao.recv(1024)
-                resposta = str(resposta, 'utf-8')
-                if resposta.upper() == 'PULAR':
-                    cont += 1
-                    if self.pular == 0:
-                        chances -= 1
-                        continue
-                    else:
-                        self.pular -= 1
-                        continue
-                elif resposta.upper() == RESPOSTAS[self.id]:
-                    self.pontuacao += 1000
-                else:
-                    chances -= 1
+            resposta = str(self.conexao.recv(1024), 'utf-8')
+            if resposta.upper() == 'PULAR':
                 cont += 1
+                if self.pular == 0:
+                    chances -= 1
+                    continue
+                else:
+                    self.pular -= 1
+                    continue
+            elif resposta.upper() == RESPOSTAS[self.id]:
+                self.pontuacao += 1000
+            else:
+                chances -= 1
+            cont += 1
 
-            RANKING.append((self.nickname,self.pontuacao))
+        RANKING.append((self.nickname,self.pontuacao))
 
-            if chances == 0:
-                self.pontuacao = 0
-                situacao = 'Você foi eliminado... mt noob'
-            elif chances > 0:
-                situacao = 'Você ganhou!!!!'
-            mensagem = resultado(self.nickname,self.pontuacao,situacao)
-            self.conexao.send(str.encode(mensagem))
-            self.conexao.close()
+        if chances == 0:
+            self.pontuacao = 0
+            situacao = 'Você foi eliminado... mt noob'
+        elif chances > 0:
+            situacao = 'Você ganhou!!!!'
+        mensagem = resultado(self.nickname,self.pontuacao,situacao)
+        self.conexao.send(str.encode(mensagem))
+        self.conexao.close()
 
 class MultiServer:
     def __init__(self):
