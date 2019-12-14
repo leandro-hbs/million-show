@@ -110,8 +110,8 @@ class MultiServer:
             conexao, endereco = self.sock.accept()
             conexao.setblocking(1)
             print("\nConexão foi estabelecida com: " + endereco[0])
-            thr = MultiplasExecucoes(conexao, endereco)
-            thr.start()
+            thread = MultiplasExecucoes(conexao, endereco)
+            thread.start()
 
 server = MultiServer()
 server.aceita_conexoes()
