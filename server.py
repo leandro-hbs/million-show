@@ -47,15 +47,22 @@ class MultiplasExecucoes(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-            self.conexao.send(str.encode('=======================================================\nBem vindo ao Show do Milhão\nInsira seu nickname: '))
+            mensagem = '======================================================='
+            mensagem = mensagem + '\n' + 'Bem vindo ao Show do Milhão'
+            mensagem = mensagem + '\n' + 'Insira seu nickname: '
+            self.conexao.send(str.encode(mensagem))
             nickname = self.conexao.recv(1024)
             self.nickname = str(nickname, 'utf-8')
             self.pontuacao = 0
             self.pular = 3
+            self.id = 0
             chances = 3
             cont = 0
+            marcador = []
             while chances > 0 and cont < 10:
-                self.id = randint(0,4)
+                while self.id in marcador:
+                    self.id = randint(0,4)
+                marcador.append(self.id)
                 mensagem = interface(self.nickname, self.pontuacao, self.id, self.pular, chances)
                 self.conexao.send(str.encode(mensagem))
                 resposta = self.conexao.recv(1024)
