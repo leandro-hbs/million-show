@@ -3,7 +3,7 @@ from random import randint
 
 global RANKING, PERGUNTAS, RESPOSTAS, ALTERNATIVAS
 
-RANKING = [('Leandro',1000000),('Noronha',900000)]
+RANKING = [('Leandro',1605000),('Noronha',1000000)]
 PERGUNTAS = [
 'Sobre o protocolo DNS no modelo TCP/IP, é correto afirmar que: ',
 'O protocolo de transmissão que permite trocas de arquivos grandes e permite também acessar remotamente sistemas de arquivos, diretamente entre computadores sem passar pela web, é chamado: ',
@@ -61,7 +61,7 @@ def interface(nickname, pontuacao, id, pular, chances, cont, acumulador, acertos
     return mensagem
 
 def resultado(nickname, pontuacao, situacao):
-    mensagem = '======================================================='
+    mensagem = '================================================================================'
     mensagem = mensagem + '\n' + situacao 
     mensagem = mensagem + '\n\n' + 'Nick: ' + nickname + '\t\tPontuação: ' + str(pontuacao)
     mensagem = mensagem + '\n' + '======================================================='
@@ -79,7 +79,7 @@ class MultiplasExecucoes(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        mensagem = '======================================================='
+        mensagem = '================================================================================'
         mensagem = mensagem + '\n' + 'Bem vindo ao Show do Milhão'
         mensagem = mensagem + '\n' + 'Insira seu nickname: '
         self.conexao.send(str.encode(mensagem))
@@ -128,6 +128,7 @@ class MultiplasExecucoes(threading.Thread):
 
 
         RANKING.append((self.nickname,self.pontuacao))
+        RANKING.sort(key=lambda x: x[1],reverse=True)
 
         if chances == 0:
             self.pontuacao = 0
