@@ -41,7 +41,7 @@ ALTERNATIVAS = [
 'A) Bastonetes\nB) Retina\nC) Cristalino\n',
 'A) Timpano\nB) Coclea\nC) Estribo\n',
 'A) Diminuição da Dopamina (neurotransmissor que regula motivação e prazer)\nB) Diminuição da Serotonina (neurotransmissor que regula o sono e apetite)\nC) Diminuição do cortisol (hormonio que regula o estresse)\n',
-'A) O alcool libera tóxinas responsáveis por um estímulo do sistema límbico\nB) O alcool estimula a parte emotiva mais primitiva do cérebro (libido)\nC) Os gases da reação química na ingestão inibem o cortex frontal do cérebro\n',
+'A) O alcool libera tóxinas responsáveis por um estímulo do sistema límbico\nB) O alcool estimula a parte emotiva mais primitiva do cérebro (libido)\nC) Os gases liberados na ingestão da bebida inibem o cortex frontal do cérebro\n',
 'A) Vasoconstrição e protozoários\nB) Diminuição da temperatura corporal e vírus\nC) Tremores e bactérias\n',
 'A) Aristoteles, Nietzche e Spinoza\nB) Nietzche, Aristoteles e Spinoza\nC) Spinoza, Nietzche e Aristoteles\n',
 'A) O Amor Fati de Nietzche\nB) O Imperativo Categórico de Kant\nC) A Virtù de Maquiavél\n',
@@ -52,7 +52,7 @@ ALTERNATIVAS = [
 
 def interface(nickname, pontuacao, id, pular, chances, cont, acumulador, acertos):
     mensagem = '\n================================================================================'
-    mensagem = mensagem + '\n' + 'Jogador: ' + nickname
+    mensagem = mensagem + '\nJogador: ' + nickname
     mensagem = mensagem + '\nPontuação: ' + str(pontuacao) + '\t\tRodada: ' + str(cont)
     mensagem = mensagem + '\nPular: ' + str(pular) + '\t\t\tVidas: ' + str(chances)
     mensagem = mensagem + '\nAcertos: ' + str(acertos) + '\t\t\tStrikes: ' + str(acumulador)
@@ -62,13 +62,14 @@ def interface(nickname, pontuacao, id, pular, chances, cont, acumulador, acertos
 
 def resultado(nickname, pontuacao, situacao):
     mensagem = '\n================================================================================'
-    mensagem = mensagem + '\n' + situacao 
-    mensagem = mensagem + '\n\n' + 'Nick: ' + nickname + '\t\tPontuação: ' + str(pontuacao)
-    mensagem = mensagem + '\n' + '================================================================================'
-    mensagem = mensagem + '\n' + 'RANKING ATUAL'
-    mensagem = mensagem + '\n' + '================================================================================'
+    mensagem = mensagem + '\n' + situacao
+    mensagem = mensagem + '\n================================================================================'
+    mensagem = mensagem + '\nNick: ' + nickname + '\t\tPontuação: ' + str(pontuacao)
+    mensagem = mensagem + '\n================================================================================'
+    mensagem = mensagem + '\nRANKING ATUAL'
+    mensagem = mensagem + '\n================================================================================'
     for i in range(len(RANKING)):
-        mensagem = mensagem + '\n' + 'Posição ' + str(i+1)
+        mensagem = mensagem + '\nPosição ' + str(i+1)
         mensagem = mensagem + '\t\tNome: ' + RANKING[i][0] + '\t\tPontuacao: ' + str(RANKING[i][1])
     return mensagem
 
@@ -90,7 +91,7 @@ class MultiplasExecucoes(threading.Thread):
         self.id = 0
         chances = 3
         cont = 0
-        acumulador = 1
+        acumulador = 0
         marcador = []
         acertos = 0
         while chances > 0 and cont < 20:
@@ -107,23 +108,23 @@ class MultiplasExecucoes(threading.Thread):
                     cont += 1
                     if self.pular == 0:
                         chances -= 1
-                        acumulador = 1
+                        acumulador = 0
                         continue
                     else:
                         self.pular -= 1
-                        acumulador = 1
+                        acumulador = 0
                         continue
                 elif resposta.upper() == RESPOSTAS[self.id]:
                     if cont < 10:
-                        self.pontuacao += 1000 * acumulador
+                        self.pontuacao += 1000 * (acumulador + 1)
                         acumulador += 1
                     else:
-                        self.pontuacao += 10000 * acumulador
+                        self.pontuacao += 10000 * (acumulador + 1)
                         acumulador += 1
                     acertos += 1
                 else:
                     chances -= 1
-                    acumulador = 1
+                    acumulador = 0
                 cont += 1
 
 
@@ -132,7 +133,6 @@ class MultiplasExecucoes(threading.Thread):
         print(RANKING)
 
         if chances == 0:
-            self.pontuacao = 0
             situacao = 'Você foi eliminado'
         elif chances > 0:
             situacao = 'Você ganhou!!!!'
