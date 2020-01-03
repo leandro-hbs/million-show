@@ -51,7 +51,7 @@ ALTERNATIVAS = [
 ]
 
 def interface(nickname, pontuacao, id, pular, chances, cont, acumulador, acertos):
-    mensagem = '======================================================='
+    mensagem = '================================================================================'
     mensagem = mensagem + '\n' + 'Jogador: ' + nickname
     mensagem = mensagem + '\nPontuação: ' + str(pontuacao) + '\t\tRodada: ' + str(cont)
     mensagem = mensagem + '\nPular: ' + str(pular) + '\t\t\tVidas: ' + str(chances)
@@ -64,9 +64,9 @@ def resultado(nickname, pontuacao, situacao):
     mensagem = '================================================================================'
     mensagem = mensagem + '\n' + situacao 
     mensagem = mensagem + '\n\n' + 'Nick: ' + nickname + '\t\tPontuação: ' + str(pontuacao)
-    mensagem = mensagem + '\n' + '======================================================='
+    mensagem = mensagem + '\n' + '================================================================================'
     mensagem = mensagem + '\n' + 'RANKING ATUAL'
-    mensagem = mensagem + '\n' + '======================================================='
+    mensagem = mensagem + '\n' + '================================================================================'
     for i in range(len(RANKING)):
         mensagem = mensagem + '\n' + 'Posição ' + str(i+1)
         mensagem = mensagem + '\t\tNome: ' + RANKING[i][0] + '\t\tPontuacao: ' + str(RANKING[i][1])
