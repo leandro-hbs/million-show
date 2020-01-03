@@ -26,7 +26,7 @@ PERGUNTAS = [
 'Como o cérebro armazena informações?',
 'A afirmação "1 = 0.99999.." é:'
 ]
-RESPOSTAS = ['B','B','A','C', 'C', 'C', 'B', 'A', 'B', 'C', 'A', 'B', 'A', 'C', 'B', 'A', 'B', 'A', 'C', 'B']
+RESPOSTAS = ['B','B','A','C','C','C','B','A','B','C','A','B','A','C','B','A','B','A','C','B']
 ALTERNATIVAS = [
 'A) Utiliza somente UDP para resolução dos nomes\nB) Um resolver gerencia as buscas do cliente em um servidor DNS\nC) Um nome de domínio tem somente uma parte, chamada também de label\n',
 'A) HTTP\nB) SMTP\nC) FTP\n',
@@ -41,20 +41,22 @@ ALTERNATIVAS = [
 'A) Bastonetes\nB) Retina\nC) Cristalino\n',
 'A) Timpano\nB) Coclea\nC) Estribo\n',
 'A) Aumento da Dopamina (neurotransmissor que regula motivação e prazer)\nB) Aumento da Serotonina (neurotransmissor que regula o sono e apetite)\nC) Diminuição do cortisol (hormonio que regula o estresse)\n',
-'A) O alcool libera tóxinas responsáveis por um estímulo do sistema límbico\nB) O alcool estimula a parte emotiva mais primitiva do cérebro (libido)\nC) Os gases da reação quimica na ingestão inibem o cortex frontal do cérebro\n',
+'A) O alcool libera tóxinas responsáveis por um estímulo do sistema límbico\nB) O alcool estimula a parte emotiva mais primitiva do cérebro (libido)\nC) Os gases da reação química na ingestão inibem o cortex frontal do cérebro\n',
 'A) Vasoconstrição e protozoários\nB) Diminuição da temperatura corporal e vírus\nC) Tremores e bactérias\n',
 'A) Aristoteles, Nietzche e Spinoza\nB) Nietzche, Aristoteles e Spinoza\nC) Spinoza, Nietzche e Aristoteles\n',
-'A) O Amor Fati de Nietzche\nB) O Imperativo Categorico de Kant\nC) A Virtù de Maquiavél\n',
+'A) O Amor Fati de Nietzche\nB) O Imperativo Categórico de Kant\nC) A Virtù de Maquiavél\n',
 'A) Tato, Audição, Paladar, Olfato, Visão\nB) Audição, Tato, Olfato, Paladar e Visão\nC) Tato, Olfato, Audição, Paladar e Visão\n',
-'A) Os neurônios guardam os impulsos nervosos e replicam quando necessario\nB) Os neurônios levam os impulsos pro subconsciente e quando necessário tornam consciente\nC) Os neurônios formam ligações entre si que será interpretada pelo cérebro quando necessário\n',
+'A) Os neurônios guardam os impulsos nervosos e replicam quando necessário\nB) Os neurônios levam os impulsos pro subconsciente e quando necessário tornam consciente\nC) Os neurônios formam ligações entre si que será interpretada pelo cérebro quando necessário\n',
 'A) Falsa, pois claramente são strings diferentes\nB) Verdadeira, pois a fração geratriz de 0.9999.. resulta em 1\nC) Falsa, pois 1 é igual a 1 e 0.999... é igual a 0.999...\n'
 ]
 
-def interface(nickname, pontuacao, id, pular, chances):
+def interface(nickname, pontuacao, id, pular, chances, cont, acumulador, acertos):
     mensagem = '======================================================='
-    mensagem = mensagem + '\n' + 'Jogador: ' + nickname + '\t\tPontuação: ' + str(pontuacao)
-    mensagem = mensagem + '\t\tPular: ' + str(pular) + '\t\tVidas: ' + str(chances)
-    mensagem = mensagem + '\n' + PERGUNTAS[id]
+    mensagem = mensagem + '\n' + 'Jogador: ' + nickname
+    mensagem = mensagem + '\nPontuação: ' + str(pontuacao) + '\t\tRodada: ' + str(cont)
+    mensagem = mensagem + '\nPular: ' + str(pular) + '\t\t\tVidas: ' + str(chances)
+    mensagem = mensagem + '\nAcertos: ' + str(acertos) + '\t\t\tStrikes: ' + str(acumulador)
+    mensagem = mensagem + '\n\n' + PERGUNTAS[id]
     mensagem = mensagem + '\n' + ALTERNATIVAS[id]
     return mensagem
 
@@ -66,7 +68,7 @@ def resultado(nickname, pontuacao, situacao):
     mensagem = mensagem + '\n' + 'RANKING ATUAL'
     mensagem = mensagem + '\n' + '======================================================='
     for i in range(len(RANKING)):
-        mensagem = mensagem + '\n' + 'Posição ' + str(i)
+        mensagem = mensagem + '\n' + 'Posição ' + str(i+1)
         mensagem = mensagem + '\t\tNome: ' + RANKING[i][0] + '\t\tPontuacao: ' + str(RANKING[i][1])
     return mensagem
 
@@ -90,27 +92,35 @@ class MultiplasExecucoes(threading.Thread):
         cont = 0
         acumulador = 1
         marcador = []
-        while chances > 0:
+        acertos = 0
+        while chances > 0 and cont < 20:
                 while self.id in marcador:
                     if cont < 10:
                         self.id = randint(0,9)
                     else:
-                        self.id = randint(10,20)
+                        self.id = randint(10,19)
                 marcador.append(self.id)
-                mensagem = interface(self.nickname, self.pontuacao, self.id, self.pular, chances)
+                mensagem = interface(self.nickname, self.pontuacao, self.id, self.pular, chances, cont, acumulador, acertos)
                 self.conexao.send(str.encode(mensagem))
                 resposta = str(self.conexao.recv(1024), 'utf-8')
                 if resposta.upper() == 'PULAR':
                     cont += 1
                     if self.pular == 0:
                         chances -= 1
+                        acumulador = 1
                         continue
                     else:
                         self.pular -= 1
+                        acumulador = 1
                         continue
                 elif resposta.upper() == RESPOSTAS[self.id]:
-                    self.pontuacao += 1000 * acumulador
-                    acumulador += 1
+                    if cont < 10:
+                        self.pontuacao += 1000 * acumulador
+                        acumulador += 1
+                    else:
+                        self.pontuacao += 10000 * acumulador
+                        acumulador += 1
+                    acertos += 1
                 else:
                     chances -= 1
                     acumulador = 1
