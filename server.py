@@ -17,7 +17,7 @@ PERGUNTAS = [
 'Na Internet, para evitar que o tráfego de dados entre os usuários e seus servidores seja visualizado por terceiros, alguns sites, como os de bancos e de comércio eletrônico, utilizam em suas conexões o protocolo',
 'Qual estrutura no globo ocular responsável por transformar a luz em impulso elétrico para o cérebro?',
 'Qual estrutura do ouvido interno é responsável por transformar impulsos de pressão em impulsos elétricos para o cérebro?',
-'A paixão (estado "hipermotivacional" de demência temporária) que do ponto de vista cerebral é caracterizada por: ',
+'A paixão (um estado "hipermotivacional" de demência temporária com duração entre 12-24 meses) do ponto de vista cerebral tem como uma caracteristica marcante: ',
 'O que ocorre no cérebro ao ingerirmos alcool?',
 'É um efeito e um causa da febre, EXCETO.',
 '"A vida deve estar em harmonia com o cosmos e maximizando suas virtudes e talentos", "Ame o mundo como ele é e dispense ideais","Todos temos uma potência, uma energia vital que oscila, felicidade é o ganho de potência", esses conceitos para felicidade são de, respectivamente.',
@@ -129,6 +129,7 @@ class MultiplasExecucoes(threading.Thread):
 
         RANKING.append((self.nickname,self.pontuacao))
         RANKING.sort(key=lambda x: x[1],reverse=True)
+        print(RANKING)
 
         if chances == 0:
             self.pontuacao = 0
