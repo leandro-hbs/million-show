@@ -26,7 +26,7 @@ PERGUNTAS = [
 'Como o cérebro armazena informações?',
 'A afirmação "1 = 0.99999.." é:'
 ]
-RESPOSTAS = ['B','B','A','C','C','C','B','A','B','C','A','B','A','C','B','A','B','A','C','B']
+RESPOSTAS = ['B','B','A','C','C','C','B','A','B','C','A','B','B','C','B','A','B','A','C','B']
 ALTERNATIVAS = [
 'A) Utiliza somente UDP para resolução dos nomes\nB) Um resolver gerencia as buscas do cliente em um servidor DNS\nC) Um nome de domínio tem somente uma parte, chamada também de label\n',
 'A) HTTP\nB) SMTP\nC) FTP\n',
@@ -40,7 +40,7 @@ ALTERNATIVAS = [
 'A) FTP\nB) SMTP\nC) HTTPS\n',
 'A) Bastonetes\nB) Retina\nC) Cristalino\n',
 'A) Timpano\nB) Coclea\nC) Estribo\n',
-'A) Aumento da Dopamina (neurotransmissor que regula motivação e prazer)\nB) Aumento da Serotonina (neurotransmissor que regula o sono e apetite)\nC) Diminuição do cortisol (hormonio que regula o estresse)\n',
+'A) Diminuição da Dopamina (neurotransmissor que regula motivação e prazer)\nB) Diminuição da Serotonina (neurotransmissor que regula o sono e apetite)\nC) Diminuição do cortisol (hormonio que regula o estresse)\n',
 'A) O alcool libera tóxinas responsáveis por um estímulo do sistema límbico\nB) O alcool estimula a parte emotiva mais primitiva do cérebro (libido)\nC) Os gases da reação química na ingestão inibem o cortex frontal do cérebro\n',
 'A) Vasoconstrição e protozoários\nB) Diminuição da temperatura corporal e vírus\nC) Tremores e bactérias\n',
 'A) Aristoteles, Nietzche e Spinoza\nB) Nietzche, Aristoteles e Spinoza\nC) Spinoza, Nietzche e Aristoteles\n',
@@ -51,7 +51,7 @@ ALTERNATIVAS = [
 ]
 
 def interface(nickname, pontuacao, id, pular, chances, cont, acumulador, acertos):
-    mensagem = '================================================================================'
+    mensagem = '\n================================================================================'
     mensagem = mensagem + '\n' + 'Jogador: ' + nickname
     mensagem = mensagem + '\nPontuação: ' + str(pontuacao) + '\t\tRodada: ' + str(cont)
     mensagem = mensagem + '\nPular: ' + str(pular) + '\t\t\tVidas: ' + str(chances)
@@ -61,7 +61,7 @@ def interface(nickname, pontuacao, id, pular, chances, cont, acumulador, acertos
     return mensagem
 
 def resultado(nickname, pontuacao, situacao):
-    mensagem = '================================================================================'
+    mensagem = '\n================================================================================'
     mensagem = mensagem + '\n' + situacao 
     mensagem = mensagem + '\n\n' + 'Nick: ' + nickname + '\t\tPontuação: ' + str(pontuacao)
     mensagem = mensagem + '\n' + '================================================================================'
@@ -79,7 +79,7 @@ class MultiplasExecucoes(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        mensagem = '================================================================================'
+        mensagem = '\n================================================================================'
         mensagem = mensagem + '\n' + 'Bem vindo ao Show do Milhão'
         mensagem = mensagem + '\n' + 'Insira seu nickname: '
         self.conexao.send(str.encode(mensagem))
