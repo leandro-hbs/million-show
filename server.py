@@ -22,7 +22,7 @@ PERGUNTAS = [
 'É um efeito e um causa da febre, EXCETO.',
 '"A vida deve estar em harmonia com o cosmos e maximizando suas virtudes e talentos", "Ame o mundo como ele é e dispense ideais","Todos temos uma potência, uma energia vital que oscila, felicidade é o ganho de potência", esses conceitos para felicidade são de, respectivamente.',
 '"Aja de forma que qualquer pessoa no seu lugar possa fazer exatamente o que você está fazendo", esta frase define:',
-'Em qual ordem desenvolvemos os 5 sentidos?',
+'Em qual ordem desenvolvemos os 5 sentidos durante a fecundação?',
 'Como o cérebro armazena informações?',
 'A afirmação "1 = 0.99999.." é:'
 ]
