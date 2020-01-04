@@ -10,5 +10,5 @@ while True:
     print(str(dados, 'utf-8'))
     resposta = input()
     sock.send(str.encode(resposta))
-
+        
 sock.close()
