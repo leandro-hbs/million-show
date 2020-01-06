@@ -51,39 +51,46 @@ class MultiplasExecucoes(threading.Thread):
         DADOS = Jogador(str(nickname, 'utf-8'))
         self.id = 0
         self.marcador = []
-        while DADOS.vidas > 0 and DADOS.rodada < 20:
-                while self.id in self.marcador:
-                    if DADOS.rodada < 10:
-                        self.id = randint(0,9)
-                    else:
-                        self.id = randint(10,19)
-                self.marcador.append(self.id)
-                mensagem = interface(DADOS, self.id)
-                self.conexao.send(str.encode(mensagem))
-                resposta = str(self.conexao.recv(1024), 'utf-8')
-                if resposta.upper() == 'PULAR':
-                    DADOS.rodada += 1
-                    if DADOS.pular == 0:
-                        DADOS.vidas -= 1
-                        DADOS.strikes = 0
-                        continue
-                    else:
-                        DADOS.pular -= 1
-                        DADOS.strikes = 0
-                        continue
-                elif resposta.upper() == RESPOSTAS[self.id]:
-                    if DADOS.rodada < 10:
-                        DADOS.pontuacao += 1000 * (DADOS.strikes + 1)
-                        DADOS.strikes += 1
-                    else:
-                        DADOS.pontuacao += 10000 * (DADOS.strikes + 1)
-                        DADOS.strikes += 1
-                    DADOS.acertos += 1
+        while DADOS.vidas > 0 and DADOS.rodada < 15:
+            if DADOS.rodada == 5 or DADOS.rodada == 10:
+                DADOS.strikes = 0
+            while self.id in self.marcador:
+                if DADOS.rodada < 5:
+                    self.id = randint(0,4)
+                elif DADOS.rodada < 10 and DADOS.rodada > 4:
+                    self.id = randint(5,9)
                 else:
-                    DADOS.vidas -= 1
-                    DADOS.strikes = 0
+                    self.id = randint(10,14)
+            self.marcador.append(self.id)
+            mensagem = interface(DADOS, self.id)
+            self.conexao.send(str.encode(mensagem))
+            resposta = str(self.conexao.recv(1024), 'utf-8')
+            if resposta.upper() == 'PULAR':
                 DADOS.rodada += 1
-
+                if DADOS.pular == 0:
+                    DADOS.vidas -= 1
+                    DADOS.pontuacao = 0
+                    DADOS.strikes = 0
+                    continue
+                else:
+                    DADOS.pular -= 1
+                    continue
+            elif resposta.upper() == RESPOSTAS[self.id]:
+                DADOS.rodada += 1
+                if DADOS.rodada < 5:
+                    DADOS.pontuacao += 1000 * (DADOS.strikes + 1)
+                    DADOS.strikes += 1
+                elif DADOS.rodada < 10 and DADOS.rodada > 4:
+                    DADOS.pontuacao += 10000 * (DADOS.strikes + 1)
+                    DADOS.strikes += 1
+                else:
+                    DADOS.pontuacao += 100000 * (DADOS.strikes + 1)
+                    DADOS.strikes += 1
+                DADOS.acertos += 1
+            else:
+                DADOS.vidas -= 1
+                DADOS.pontuacao /= 2
+                DADOS.strikes = 0
 
         RANKING.append((DADOS.nickname,DADOS.pontuacao))
         RANKING.sort(key=lambda x: x[1],reverse=True)
@@ -91,7 +98,7 @@ class MultiplasExecucoes(threading.Thread):
         if DADOS.vidas == 0:
             situacao = 'Você foi eliminado'
         elif DADOS.vidas > 0:
-            situacao = 'Você ganhou!!!!'
+            situacao = 'Parabéns ' + str(DADOS.nickname) + ', Você ganhou!!!!'
         mensagem = resultado(DADOS.nickname,DADOS.pontuacao,situacao)
         print(mensagem)
         self.conexao.send(str.encode(mensagem))
