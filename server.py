@@ -65,8 +65,8 @@ class MultiplasExecucoes(threading.Thread):
             mensagem = interface(DADOS, self.id)
             self.conexao.send(str.encode(mensagem))
             resposta = str(self.conexao.recv(1024), 'utf-8')
+            DADOS.rodada += 1
             if resposta.upper() == 'PULAR':
-                DADOS.rodada += 1
                 if DADOS.pular == 0:
                     DADOS.vidas -= 1
                     DADOS.pontuacao = 0
@@ -76,7 +76,6 @@ class MultiplasExecucoes(threading.Thread):
                     DADOS.pular -= 1
                     continue
             elif resposta.upper() == RESPOSTAS[self.id]:
-                DADOS.rodada += 1
                 if DADOS.rodada < 5:
                     DADOS.pontuacao += 1000 * (DADOS.strikes + 1)
                     DADOS.strikes += 1
@@ -92,14 +91,14 @@ class MultiplasExecucoes(threading.Thread):
                 DADOS.pontuacao /= 2
                 DADOS.strikes = 0
 
-        RANKING.append((DADOS.nickname,DADOS.pontuacao))
+        RANKING.append((DADOS.nickname,int(DADOS.pontuacao)))
         RANKING.sort(key=lambda x: x[1],reverse=True)
 
         if DADOS.vidas == 0:
             situacao = 'Você foi eliminado'
         elif DADOS.vidas > 0:
-            situacao = 'Parabéns ' + str(DADOS.nickname) + ', Você ganhou!!!!'
-        mensagem = resultado(DADOS.nickname,DADOS.pontuacao,situacao)
+            situacao = 'Parabéns ' + str(DADOS.nickname) + ', Você sobreviveu e agora irá ter seu nome lembrado no Ranking!!!!'
+        mensagem = resultado(DADOS.nickname,int(DADOS.pontuacao),situacao)
         print(mensagem)
         self.conexao.send(str.encode(mensagem))
         self.conexao.close()
