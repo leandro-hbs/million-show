@@ -88,7 +88,7 @@ class MultiplasExecucoes(threading.Thread):
                 DADOS.acertos += 1
             else:
                 DADOS.vidas -= 1
-                DADOS.pontuacao /= 2
+                DADOS.pontuacao = int(DADOS.pontuacao/2)
                 DADOS.strikes = 0
 
         RANKING.append((DADOS.nickname,int(DADOS.pontuacao)))
