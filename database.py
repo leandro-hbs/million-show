@@ -1,6 +1,7 @@
-global RANKING, PERGUNTAS, RESPOSTAS, ALTERNATIVAS
+global RANKING, COMANDOS, PERGUNTAS, RESPOSTAS, ALTERNATIVAS
 
 RANKING = [('Leandro',1000000),('Noronha',1000000)]
+COMANDOS = ['QUESTION','HELP','SKIP','ANSWER','RANKING']
 PERGUNTAS = [
 'O DHCP (Dynamic Host Configuration Protocol) é um protocolo: ',
 'Dentre os protocolos que compreendem a camada de Aplicação do Modelo TCP/IP, encontram-se:',
@@ -19,20 +20,20 @@ PERGUNTAS = [
 'Em uma gaveta, havia várias canetas coloridas, sendo 8 cinzas, 7 verdes, 4 roxas, 3 marrons e 2 rosas. Retirando-se quatro dessas canetas e sabendo-se que nenhuma delas era cinza, nem rosa e nem verde, pode-se afirmar que:'
 ]
 ALTERNATIVAS = [
-'A) Padrão da internet para o gerenciamento de dispositivos em redes IP\nB) Para operação de serviços de rede de forma segura que utiliza criptografia\nC) Que permite a atribuição manual e a atribuição automática de endereços IP\n',
-'A) DHCP, DNS e SNMP\nB) IP, TELNET, NFS\nC) ICMP, IP e DNS\n',
-'A) Tradução dos nomes dos hospedeiros para endereços IP\nB) Apelidos de hospedeiros\nC) Resolução ARP (Protocolo de Resolução de Endereços)\n',
-'A) A máscara de sub-rede\nB) O endereço dos servidores Web\nC) O endereço dos servidores DNS\n',
-'A) 80 e 443\nB) 8080 e 443\nC) 80 e 81\n',
-'A) Bastonetes\nB) Retina\nC) Cristalino\n',
-'A) Timpano\nB) Coclea\nC) Estribo\n',
-'A) Diminuição da Dopamina (neurotransmissor que regula motivação e prazer)\nB) Diminuição da Serotonina (neurotransmissor que regula o sono e apetite)\nC) Diminuição do cortisol (hormonio que regula o estresse)\n',
-'A) O alcool libera tóxinas responsáveis por um estímulo do sistema límbico\nB) O alcool estimula a parte emotiva mais primitiva do cérebro (libido)\nC) Os gases liberados na ingestão da bebida inibem o cortex frontal do cérebro\n',
-'A) Os neurônios guardam os impulsos nervosos e replicam quando necessário\nB) Os neurônios levam os impulsos pro subconsciente e quando necessário tornam consciente\nC) Os neurônios formam ligações entre si que será interpretada pelo cérebro quando necessário\n',
-'A) hoje não é segunda-feira e amanhã não choverá\nB) hoje é segunda-feira ou amanhã choverá\nC) hoje não é segunda-feira ou amanhã choverá\n',
-'A) 101\nB) 29\nC) 111\n',
-'A) Se um homem é bonito, então é inteligente\nB) Se um homem não é alto, então não é bonito\nC) Se um homem não é bonito, então não é inteligente\n',
-'A) Todo corpo sólido é cristal\nB) Todo cristal é corpo sólido\nC) Nenhum corpo sólido é cristal\n',
-'A) Três são roxas e uma é marrom\nB) Pelo menos uma é roxa\nC) Pelo menos uma é marrom\n'
+'A) Padrão da internet para o gerenciamento de dispositivos em redes IP\nB) Para operação de serviços de rede de forma segura que utiliza criptografia\nC) Que permite a atribuição manual e a atribuição automática de endereços IP',
+'A) DHCP, DNS e SNMP\nB) IP, TELNET, NFS\nC) ICMP, IP e DNS',
+'A) Tradução dos nomes dos hospedeiros para endereços IP\nB) Apelidos de hospedeiros\nC) Resolução ARP (Protocolo de Resolução de Endereços)',
+'A) A máscara de sub-rede\nB) O endereço dos servidores Web\nC) O endereço dos servidores DNS',
+'A) 80 e 443\nB) 8080 e 443\nC) 80 e 81',
+'A) Bastonetes\nB) Retina\nC) Cristalino',
+'A) Timpano\nB) Coclea\nC) Estribo',
+'A) Diminuição da Dopamina (neurotransmissor que regula motivação e prazer)\nB) Diminuição da Serotonina (neurotransmissor que regula o sono e apetite)\nC) Diminuição do cortisol (hormonio que regula o estresse)',
+'A) O alcool libera tóxinas responsáveis por um estímulo do sistema límbico\nB) O alcool estimula a parte emotiva mais primitiva do cérebro (libido)\nC) Os gases liberados na ingestão da bebida inibem o cortex frontal do cérebro',
+'A) Os neurônios guardam os impulsos nervosos e replicam quando necessário\nB) Os neurônios levam os impulsos pro subconsciente e quando necessário tornam consciente\nC) Os neurônios formam ligações entre si que será interpretada pelo cérebro quando necessário',
+'A) hoje não é segunda-feira e amanhã não choverá\nB) hoje é segunda-feira ou amanhã choverá\nC) hoje não é segunda-feira ou amanhã choverá',
+'A) 101\nB) 29\nC) 111',
+'A) Se um homem é bonito, então é inteligente\nB) Se um homem não é alto, então não é bonito\nC) Se um homem não é bonito, então não é inteligente',
+'A) Todo corpo sólido é cristal\nB) Todo cristal é corpo sólido\nC) Nenhum corpo sólido é cristal',
+'A) Três são roxas e uma é marrom\nB) Pelo menos uma é roxa\nC) Pelo menos uma é marrom'
 ]
 RESPOSTAS = ['C','A','C','B','A','A','B','B','C','C','C','A','A','B','B']

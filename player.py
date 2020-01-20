@@ -6,9 +6,16 @@ port = 9999
 sock.connect((host, port))
 
 while True:
-    dados = sock.recv(2048)
-    print(str(dados, 'utf-8'))
-    resposta = input()
-    sock.send(str.encode(resposta))
-        
-sock.close()
+    try:
+        dados = sock.recv(2048)
+        print('\n================================================================================')
+        print(str(dados, 'utf-8'),end='')
+        print('\n================================================================================')
+        resposta = ''
+        while len(resposta) == 0:
+            resposta = input("Comando: ")
+        sock.send(str.encode(resposta))
+    except KeyboardInterrupt:
+        sock.close()
+        print('Fim de jogo')
+        break
