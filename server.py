@@ -156,6 +156,7 @@ class MultiplasExecucoes(threading.Thread):
                     mensagem += '\nO terceiro tem questões relacionadas ao raciocínio lógico'
                     mensagem += '\n\nO jogador tem 6 comandos, são eles:'
                     mensagem += '\nNICKNAME - usado para definir seu nick. Exemplo: nickname leandro'
+                    mensagem += '\nINFORMATION - usado para mostrar as informações atuais. Exemplo: information'
                     mensagem += '\nQUESTION - usado para requesitar uma questão do sistema. Exemplo: question'
                     mensagem += '\nSKIP - usado para pular a questão atual. Exemplo: skip'
                     mensagem += '\nANSWER - usado para responder a questão atual. Exemplo: answer c'
