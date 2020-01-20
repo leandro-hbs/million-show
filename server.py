@@ -12,13 +12,11 @@ class Jogador:
         self.strikes = 0
         self.round = 0
 
-def interface(player, id):
+def informacao(player):
     mensagem = 'Jogador: ' + player.nickname
     mensagem += '\nPontuação:\t' + str(player.score) + '\t\tRodada:\t\t' + str(player.round+1)
     mensagem += '\nPular:\t\t' + str(player.skip) + '\t\tVidas:\t\t' + str(player.lifes)
     mensagem += '\nAcertos:\t' + str(player.hits) + '\t\tStrikes:\t' + str(player.strikes)
-    mensagem += '\n\n' + PERGUNTAS[id]
-    mensagem += '\n' + ALTERNATIVAS[id]
     return mensagem
 
 def resultado(nickname, pontuacao, adicional):
@@ -79,7 +77,8 @@ class MultiplasExecucoes(threading.Thread):
 
             if comando[0].upper() in COMANDOS:
                 if comando[0].upper() == "QUESTION":
-                    mensagem = interface(player, self.id)
+                    mensagem = PERGUNTAS[self.id]
+                    mensagem += '\n' + ALTERNATIVAS[self.id]
                     self.conexao.send(str.encode(mensagem))
 
                 elif comando[0].upper() == "ANSWER":
@@ -164,6 +163,11 @@ class MultiplasExecucoes(threading.Thread):
                     mensagem += '\nLembre-se, você tem apenas 3 vidas e 3 pular'
                     mensagem += '\nBoa sorte e Bom jogo ;D'
                     self.conexao.send(str.encode(mensagem))
+                
+                elif comando[0].upper() == "INFORMATION":
+                    mensagem = informacao(player)
+                    self.conexao.send(str.encode(mensagem))
+
 
             else:
                 mensagem = 'Comando não identificado, por favor verifique se a ortografia ou sintaxe está como os comandos abaixo: '
