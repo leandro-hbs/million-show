@@ -14,6 +14,8 @@ while True:
         resposta = ''
         while len(resposta) == 0:
             resposta = input("Comando: ")
+        if resposta.upper() == 'A' or resposta.upper() == 'B' or resposta.upper() == 'C':
+            resposta = 'answer ' + resposta
         sock.send(str.encode(resposta))
     except KeyboardInterrupt:
         sock.close()

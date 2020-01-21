@@ -1,4 +1,4 @@
-import socket, sys, threading, time
+import socket, threading
 from random import randint
 from database import *
 
@@ -19,12 +19,12 @@ def informacao(player):
     mensagem += '\nAcertos:\t' + str(player.hits) + '\t\tStrikes:\t' + str(player.strikes)
     return mensagem
 
-def resultado(nickname, pontuacao, adicional):
-    RANKING.append((nickname,pontuacao))
+def resultado(nickname, score, add):
+    RANKING.append((nickname,score))
     RANKING.sort(key=lambda x: x[1],reverse=True)
-    mensagem = adicional
+    mensagem = add
     mensagem += '\n================================================================================'
-    mensagem += '\nNick: ' + nickname + '\t\tPontuação: ' + str(pontuacao)
+    mensagem += '\nNick: ' + nickname + '\t\tPontuação: ' + str(score)
     mensagem += '\n================================================================================'
     mensagem += '\nRANKING ATUAL'
     mensagem += '\n================================================================================'
@@ -38,6 +38,7 @@ class MultiplasExecucoes(threading.Thread):
         self.conexao = conexao
         self.endereco = endereco
         self.conexoes = conexoes
+        self.comandos = ['QUESTION','HELP','SKIP','ANSWER','QUIT','INFORMATION']
         self.id = randint(0,4)
         self.marcador = []
         threading.Thread.__init__(self)
@@ -72,10 +73,10 @@ class MultiplasExecucoes(threading.Thread):
                 mensagem += '\nSintaxe: nickname xxxx'
                 self.conexao.send(str.encode(mensagem))
 
-        while player.round < 15:
+        while True:
             comando = str(self.conexao.recv(1024), 'utf-8').split()
 
-            if comando[0].upper() in COMANDOS:
+            if comando[0].upper() in self.comandos:
                 if comando[0].upper() == "QUESTION":
                     mensagem = PERGUNTAS[self.id]
                     mensagem += '\n' + ALTERNATIVAS[self.id]
@@ -97,6 +98,8 @@ class MultiplasExecucoes(threading.Thread):
                                 player.score += 100000 * (player.strikes + 1)
                                 mensagem += str(100000 * (player.strikes + 1)) + ' pontos'  + '\nVocê tem ' + str(player.score) + ' pontos'
                                 player.strikes += 1
+                            if player.round == 5 or player.round == 10:
+                                player.strikes = 0
                             player.hits += 1
                         else:
                             mensagem = 'Resposta Incorreta' + '\nA resposta certa era a letra: ' + RESPOSTAS[self.id]
@@ -110,9 +113,15 @@ class MultiplasExecucoes(threading.Thread):
                             player.strikes = 0
                     else:
                         mensagem = 'Sintaxe invalida, por favor siga o modelo abaixo:'
-                        mensagem += '\nanswer xxxx'
+                        mensagem += '\nanswer x'
                     self.marcador.append(self.id)
                     player.round += 1
+                    if player.round == 14 and player.lifes > 0:
+                        mensagem = 'Parabéns, Você sobreviveu, seu nome será lembrado por todas as proximas gerações'
+                        mensagem = resultado(player.nickname,player.score,mensagem)
+                        self.conexao.send(str.encode(mensagem))
+                        self.conexao.close()
+                        break
                     while self.id in self.marcador and len(self.marcador) < 15:
                         if player.round < 5:
                             self.id = randint(0,4)
@@ -128,9 +137,16 @@ class MultiplasExecucoes(threading.Thread):
                         mensagem = 'Voce pulou essa questão e agora tem ' + str(player.skip) + ' pular'
                     elif player.skip == 1:
                         player.skip -= 1
-                        COMANDOS.remove("SKIP")
+                        self.comandos.remove("SKIP")
                         mensagem = 'Você pulou essa questão, mas cuidado, pois daqui em diante não haverá mais essa opção'
                     self.marcador.append(self.id)
+                    player.round += 1
+                    if player.round == 14 and player.lifes > 0:
+                        mensagem = 'Parabéns, Você sobreviveu, seu nome será lembrado por todas as proximas gerações'
+                        mensagem = resultado(player.nickname,player.score,mensagem)
+                        self.conexao.send(str.encode(mensagem))
+                        self.conexao.close()
+                        break
                     while self.id in self.marcador and len(self.marcador) < 15:
                         if player.round < 5:
                             self.id = randint(0,4)
@@ -138,10 +154,9 @@ class MultiplasExecucoes(threading.Thread):
                             self.id = randint(5,9)
                         else:
                             self.id = randint(10,14)
-                    player.round += 1
                     self.conexao.send(str.encode(mensagem))
 
-                elif comando[0].upper() == "RANKING":
+                elif comando[0].upper() == "QUIT":
                     mensagem = 'Uma pena que tenha desistido tão cedo, tinha muita fé em você'
                     mensagem = resultado(player.nickname,player.score,mensagem)
                     self.conexao.send(str.encode(mensagem))
@@ -160,7 +175,7 @@ class MultiplasExecucoes(threading.Thread):
                     mensagem += '\nQUESTION - usado para requesitar uma questão do sistema. Exemplo: question'
                     mensagem += '\nSKIP - usado para pular a questão atual. Exemplo: skip'
                     mensagem += '\nANSWER - usado para responder a questão atual. Exemplo: answer c'
-                    mensagem += '\nRANKING - usado para encerrar o jogo e verificar sua pontuação. Exemplo: ranking'
+                    mensagem += '\nQUIT - usado para encerrar o jogo e verificar sua pontuação. Exemplo: quit'
                     mensagem += '\nLembre-se, você tem apenas 3 vidas e 3 pular'
                     mensagem += '\nBoa sorte e Bom jogo ;D'
                     self.conexao.send(str.encode(mensagem))
@@ -169,11 +184,10 @@ class MultiplasExecucoes(threading.Thread):
                     mensagem = informacao(player)
                     self.conexao.send(str.encode(mensagem))
 
-
             else:
                 mensagem = 'Comando não identificado, por favor verifique se a ortografia ou sintaxe está como os comandos abaixo: '
-                for i in range(len(COMANDOS)):
-                    mensagem += '\n' + COMANDOS[i]
+                for i in range(len(self.comandos)):
+                    mensagem += '\n' + self.comandos[i]
                 self.conexao.send(str.encode(mensagem))
 
 class MultiServer:

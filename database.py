@@ -1,7 +1,6 @@
-global RANKING, COMANDOS, PERGUNTAS, RESPOSTAS, ALTERNATIVAS
+global RANKING, PERGUNTAS, RESPOSTAS, ALTERNATIVAS
 
 RANKING = [('Leandro',1000000),('Noronha',1000000)]
-COMANDOS = ['QUESTION','HELP','SKIP','ANSWER','RANKING','INFORMATION']
 PERGUNTAS = [
 'O DHCP (Dynamic Host Configuration Protocol) é um protocolo: ',
 'Dentre os protocolos que compreendem a camada de Aplicação do Modelo TCP/IP, encontram-se:',
