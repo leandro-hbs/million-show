@@ -57,20 +57,18 @@ class MultiplasExecucoes(threading.Thread):
                             auxiliar = 1
                     if auxiliar == 0:
                         player = Jogador(comando[1])
-                        mensagem = 'Jogador ' + player.nickname + ' foi cadastrado com sucesso'
+                        mensagem = MENSAGENS[601]
                         self.conexao.send(str.encode(mensagem))
                         break
                     else:
-                        mensagem = 'Infelizmente o nome escolhido já está em uso, por favor tente outro nome'
+                        mensagem = MENSAGENS[602]
                         self.conexao.send(str.encode(mensagem))
                         continue
                 else:
-                    mensagem = 'Sintaxe inválida, por favor siga o modelo abaixo:'
-                    mensagem += '\nnickname xxxx'
+                    mensagem = MENSAGENS[603]
                     self.conexao.send(str.encode(mensagem))
             else:
-                mensagem = 'Por favor defina seu nickname para que o jogo possa iniciar'
-                mensagem += '\nSintaxe: nickname xxxx'
+                mensagem = MENSAGENS[604]
                 self.conexao.send(str.encode(mensagem))
 
         while True:
@@ -85,39 +83,38 @@ class MultiplasExecucoes(threading.Thread):
                 elif comando[0].upper() == "ANSWER":
                     if len(comando) > 1:
                         if comando[1].upper() == RESPOSTAS[self.id]:
-                            mensagem = 'Resposta Correta' + '\nVoce recebeu: '
+                            mensagem = MENSAGENS[605]
                             if player.round < 5:
                                 player.score += 1000 * (player.strikes + 1)
-                                mensagem += str(1000 * (player.strikes + 1)) + ' pontos' + '\nVocê tem ' + str(player.score) + ' pontos'
+                                mensagem += '\nVocê recebeu: ' + str(1000 * (player.strikes + 1)) + ' pontos' + '\nVocê tem ' + str(player.score) + ' pontos'
                                 player.strikes += 1
                             elif player.round < 10 and player.round > 4:
                                 player.score += 10000 * (player.strikes + 1)
-                                mensagem += str(10000 * (player.strikes + 1)) + ' pontos'  + '\nVocê tem ' + str(player.score) + ' pontos'
+                                mensagem += '\nVocê recebeu: ' + str(10000 * (player.strikes + 1)) + ' pontos'  + '\nVocê tem ' + str(player.score) + ' pontos'
                                 player.strikes += 1
                             else:
                                 player.score += 100000 * (player.strikes + 1)
-                                mensagem += str(100000 * (player.strikes + 1)) + ' pontos'  + '\nVocê tem ' + str(player.score) + ' pontos'
+                                mensagem += '\nVocê recebeu: ' + str(100000 * (player.strikes + 1)) + ' pontos'  + '\nVocê tem ' + str(player.score) + ' pontos'
                                 player.strikes += 1
                             if player.round == 5 or player.round == 10:
                                 player.strikes = 0
                             player.hits += 1
                         else:
-                            mensagem = 'Resposta Incorreta' + '\nA resposta certa era a letra: ' + RESPOSTAS[self.id]
+                            mensagem = MENSAGENS[606]
                             player.lifes -= 1
                             if player.lifes == 0:
-                                mensagem = 'Infelizmente suas vidas acabaram, mas parabéns por ter chegado até aqui' + '\nA resposta certa era a letra: ' + RESPOSTAS[self.id]
+                                mensagem = MENSAGENS[608]
                                 mensagem = resultado(player.nickname,player.score,mensagem)
                                 self.conexao.send(str.encode(mensagem))
                                 self.conexao.close()
                                 break
                             player.strikes = 0
                     else:
-                        mensagem = 'Sintaxe invalida, por favor siga o modelo abaixo:'
-                        mensagem += '\nanswer x'
+                        mensagem = MENSAGENS[603]
                     self.marcador.append(self.id)
                     player.round += 1
                     if player.round == 14 and player.lifes > 0:
-                        mensagem = 'Parabéns, Você sobreviveu, seu nome será lembrado por todas as proximas gerações'
+                        mensagem = MENSAGENS[609]
                         mensagem = resultado(player.nickname,player.score,mensagem)
                         self.conexao.send(str.encode(mensagem))
                         self.conexao.close()
@@ -134,15 +131,15 @@ class MultiplasExecucoes(threading.Thread):
                 elif comando[0].upper() == "SKIP":
                     if player.skip > 1:
                         player.skip -= 1
-                        mensagem = 'Voce pulou essa questão e agora tem ' + str(player.skip) + ' pular'
+                        mensagem = MENSAGENS[607]
                     elif player.skip == 1:
                         player.skip -= 1
                         self.comandos.remove("SKIP")
-                        mensagem = 'Você pulou essa questão, mas cuidado, pois daqui em diante não haverá mais essa opção'
+                        mensagem = MENSAGENS[607]
                     self.marcador.append(self.id)
                     player.round += 1
                     if player.round == 14 and player.lifes > 0:
-                        mensagem = 'Parabéns, Você sobreviveu, seu nome será lembrado por todas as proximas gerações'
+                        mensagem = MENSAGENS[609]
                         mensagem = resultado(player.nickname,player.score,mensagem)
                         self.conexao.send(str.encode(mensagem))
                         self.conexao.close()
@@ -157,7 +154,7 @@ class MultiplasExecucoes(threading.Thread):
                     self.conexao.send(str.encode(mensagem))
 
                 elif comando[0].upper() == "QUIT":
-                    mensagem = 'Uma pena que tenha desistido tão cedo, tinha muita fé em você'
+                    mensagem = MENSAGENS[608]
                     mensagem = resultado(player.nickname,player.score,mensagem)
                     self.conexao.send(str.encode(mensagem))
                     self.conexao.close()
@@ -165,7 +162,7 @@ class MultiplasExecucoes(threading.Thread):
 
                 elif comando[0].upper() == "HELP":
                     mensagem = 'O jogo do milhão consiste em um jogo de perguntas e respostas'
-                    mensagem += '\n\nNele está contido 3 niveis:'
+                    mensagem += '\n\nNele está contido 3 níveis:'
                     mensagem += '\nO primeiro tem questões relacionadas aos protocolos de aplicação estudados'
                     mensagem += '\nO segundo tem questões relacionadas a biologia humana em geral'
                     mensagem += '\nO terceiro tem questões relacionadas ao raciocínio lógico'
@@ -177,7 +174,7 @@ class MultiplasExecucoes(threading.Thread):
                     mensagem += '\nANSWER - usado para responder a questão atual. Exemplo: answer c'
                     mensagem += '\nQUIT - usado para encerrar o jogo e verificar sua pontuação. Exemplo: quit'
                     mensagem += '\nLembre-se, você tem apenas 3 vidas e 3 pular'
-                    mensagem += '\nBoa sorte e Bom jogo ;D'
+                    mensagem += '\nBoa sorte e Bom jogo'
                     self.conexao.send(str.encode(mensagem))
                 
                 elif comando[0].upper() == "INFORMATION":
@@ -185,7 +182,7 @@ class MultiplasExecucoes(threading.Thread):
                     self.conexao.send(str.encode(mensagem))
 
             else:
-                mensagem = 'Comando não identificado, por favor verifique se a ortografia ou sintaxe está como os comandos abaixo: '
+                mensagem = MENSAGENS[604] + '\nCOMANDOS:'
                 for i in range(len(self.comandos)):
                     mensagem += '\n' + self.comandos[i]
                 self.conexao.send(str.encode(mensagem))
