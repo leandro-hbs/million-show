@@ -1,5 +1,6 @@
 import os, socket, subprocess
 
+# Iniciando conexão
 sock = socket.socket()
 host = '127.0.0.1'
 port = 9999
@@ -7,6 +8,7 @@ sock.connect((host, port))
 
 while True:
     try:
+        # Tratando dados recebidos e requesitando respostas
         dados = sock.recv(2048)
         print('\n================================================================================')
         print(str(dados, 'utf-8'),end='')

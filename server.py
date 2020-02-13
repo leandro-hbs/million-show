@@ -2,6 +2,7 @@ import socket, threading
 from random import randint
 from database import *
 
+# Inicia um jogador
 class Jogador:
     def __init__(self, nickname):
         self.nickname = nickname
@@ -12,6 +13,7 @@ class Jogador:
         self.strikes = 0
         self.round = 0
 
+# Função para formatação da mensagem exibida pelo comando INFORMATION
 def informacao(player):
     mensagem = 'Jogador: ' + player.nickname
     mensagem += '\nPontuação:\t' + str(player.score) + '\t\tRodada:\t\t' + str(player.round+1)
@@ -19,6 +21,7 @@ def informacao(player):
     mensagem += '\nAcertos:\t' + str(player.hits) + '\t\tStrikes:\t' + str(player.strikes)
     return mensagem
 
+# Função para formatação da mensagem final
 def resultado(nickname, score, add):
     RANKING.append((nickname,score))
     RANKING.sort(key=lambda x: x[1],reverse=True)
@@ -33,7 +36,9 @@ def resultado(nickname, score, add):
         mensagem += '\t\tNome: ' + RANKING[i][0] + '\t\tPontuacao: ' + str(RANKING[i][1])
     return mensagem
 
+# Classe de controle do fluxo do jogo com uso de Threads para multiplas conexões
 class MultiplasExecucoes(threading.Thread):
+    # Inicialização de variaveis
     def __init__(self, conexao, endereco, conexoes):
         self.conexao = conexao
         self.endereco = endereco
@@ -43,12 +48,15 @@ class MultiplasExecucoes(threading.Thread):
         self.marcador = []
         threading.Thread.__init__(self)
 
+    # Função de controle do jogo
     def run(self):
         mensagem = 'Bem vindo ao Show do Milhão'
         self.conexao.send(str.encode(mensagem))
 
         while True:
             comando = str(self.conexao.recv(1024), 'utf-8').split()
+
+            # Tratamentos para o comando NICKNAME e inicialização do jogo
             if comando[0].upper() == "NICKNAME":
                 if len(comando) > 1:
                     auxiliar = 0
@@ -74,12 +82,16 @@ class MultiplasExecucoes(threading.Thread):
         while True:
             comando = str(self.conexao.recv(1024), 'utf-8').split()
 
+            # Verificando se o comando é válido
             if comando[0].upper() in self.comandos:
+
+                # Tratamento e retorno da pergunta quando o comando é QUESTION
                 if comando[0].upper() == "QUESTION":
                     mensagem = PERGUNTAS[self.id]
                     mensagem += '\n' + ALTERNATIVAS[self.id]
                     self.conexao.send(str.encode(mensagem))
 
+                # Tratamentos e retorno da pontuação quando o comando é ANSWER ou finalização do jogo
                 elif comando[0].upper() == "ANSWER":
                     if len(comando) > 1:
                         if comando[1].upper() == RESPOSTAS[self.id]:
@@ -128,6 +140,7 @@ class MultiplasExecucoes(threading.Thread):
                             self.id = randint(10,14)
                     self.conexao.send(str.encode(mensagem))
 
+                # Tratamento quando o comando é SKIP
                 elif comando[0].upper() == "SKIP":
                     if player.skip > 1:
                         player.skip -= 1
@@ -153,6 +166,7 @@ class MultiplasExecucoes(threading.Thread):
                             self.id = randint(10,14)
                     self.conexao.send(str.encode(mensagem))
 
+                # Formatação da mensagem quando o comando é QUIT
                 elif comando[0].upper() == "QUIT":
                     mensagem = MENSAGENS[608]
                     mensagem = resultado(player.nickname,player.score,mensagem)
@@ -160,6 +174,7 @@ class MultiplasExecucoes(threading.Thread):
                     self.conexao.close()
                     break
 
+                # Formatação da mensagem quando o comando é HELP
                 elif comando[0].upper() == "HELP":
                     mensagem = 'O jogo do milhão consiste em um jogo de perguntas e respostas'
                     mensagem += '\n\nNele está contido 3 níveis:'
@@ -177,17 +192,22 @@ class MultiplasExecucoes(threading.Thread):
                     mensagem += '\nBoa sorte e Bom jogo'
                     self.conexao.send(str.encode(mensagem))
                 
+                # Retorno da mensagem quando o comando é INFORMATION
                 elif comando[0].upper() == "INFORMATION":
                     mensagem = informacao(player)
                     self.conexao.send(str.encode(mensagem))
 
+            # Tratamento de erro de sintaxe
             else:
                 mensagem = MENSAGENS[604] + '\nCOMANDOS:'
                 for i in range(len(self.comandos)):
                     mensagem += '\n' + self.comandos[i]
                 self.conexao.send(str.encode(mensagem))
 
+# Classe de controle de conexões
 class MultiServer:
+
+    # Criando socket para abrir conexão na porta 9999
     def __init__(self):
         try:
             self.host = '0.0.0.0'
@@ -201,6 +221,7 @@ class MultiServer:
         except socket.error as msg:
             print ("Erro de criação de socket: " + str(msg))
 
+    # Aceitando multiplas conexões, armazenando num vetor e iniciando o jogo
     def aceita_conexoes(self):
         while True:
             conexao, endereco = self.sock.accept()
