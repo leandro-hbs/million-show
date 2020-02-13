@@ -40,7 +40,7 @@ _ANSWER_ - Usado para responder a questão atual.
 
 ![answer](images/answer.png)
 
-_[A, B, C]_ - Uma forma mais simples para evitar repetições
+_[A, B, C]_ - Uma forma mais simples para evitar repetições excessivas para respostas.
 
 ![facility](images/facility.png)
 
